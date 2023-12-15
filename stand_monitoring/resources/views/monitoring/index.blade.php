@@ -2,6 +2,7 @@
 @section('title', 'Monitoring')
 @section('content')
 @auth
+@csrf
 
 <div class="header">
   <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
@@ -39,7 +40,7 @@
                 <p class="card-text">Производит: {{$sorted[$index]->Purpose}}</p>
                 <p class="card-text">Количество смыканий: {{$sorted[$index]->Count}}</p>
                 <div class="d-flex justify-content-between align-items-center">
-                  <a href="monitoring/presentation?RFID={{$sorted[$index]->RFID}}&ID={{$sorted[$index]->id}}&Date={{$sorted[$index]->updated_at}}" class="navbar-brand d-flex align-items-center">
+                  <a href="monitoring/presentation?RFID={{$sorted[$index]->RFID}}&ID={{$sorted[$index]->id}}&DateFrom={{$sorted[$index]->updated_at}}&DateTo={{$sorted[$index]->updated_at}}" class="navbar-brand d-flex align-items-center">
                     <button type="button" class="btn btn-sm btn-outline-secondary">Подробнее</button>
                   </a>
                   @if ($sorted[$index]->State == 1)
@@ -60,9 +61,10 @@
 
   <footer class="text-muted" style="display: grid;place-items: center;justify-content: center;align-items: center;align-content: center;">
     <div class="container">
-    <div><p class="float-right"></div>
+    <div><p class="float-right">
         {{$sorted->links()}}
       </p>
+    </div>
   </footer>
     
   @else @php abort(401); @endphp

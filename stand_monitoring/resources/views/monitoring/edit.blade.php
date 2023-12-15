@@ -2,7 +2,7 @@
 @section('title', 'Editing')
 @section('content')
 @auth
-<form class="container" action="{{route('monitoring.update', $archive->id)}}" method="post">
+<form class="container" action="{{route('monitoring.update', ['id' => $neededEntry[0]['id']])}}" method="post">
   @csrf
   {{ method_field('PATCH') }}
   <div class="form-group">
@@ -11,11 +11,7 @@
   </div>
   <div class="form-group">
     <label for="MachineInput">Номер станка</label>
-    <input type="text" name="ID_stanok" class="form-control" id="MachineInput" value="{{$neededEntry[0]['ID_stanok']}}" placeholder="Введите номер станка, на который будет установлена метка (?)" required>
-  </div>
-  <div class="form-group">
-    <label for="CountInput">Количество смыканий</label>
-    <input type="text" name="Count" class="form-control" id="CountInput" value="{{$neededEntry[0]['Count']}}" placeholder="Введите состояние метки" required>
+    <input type="text" name="ID_stanok" class="form-control" id="MachineInput" value="{{$neededEntry[0]['ID_stanok']}}" placeholder="Введите номер станка, на который будет установлена метка" required>
   </div>
   <div class="form-group">
     <label for="StateInput">Состояние</label>
@@ -39,7 +35,9 @@
 </form>
 
 @else 
-  <div class="main" style="display: grid;place-items: center;justify-content: center;align-items: center;align-content: center; vertical-align: middle;">Пользователь не авторизирован, пожалуйста, войдите в аккаунт</div>
+  @php
+    abort(401);
+  @endphp
 
 @endauth
 @endsection

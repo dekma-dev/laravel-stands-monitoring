@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Moscow',
 
     /*
     |--------------------------------------------------------------------------
@@ -136,6 +136,7 @@ return [
     'maintenance' => [
         'driver' => 'file',
         // 'store'  => 'redis',
+
     ],
 
     /*

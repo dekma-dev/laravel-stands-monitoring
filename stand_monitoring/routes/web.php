@@ -9,7 +9,7 @@ use App\Http\Controllers\TableController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/monitoring', [HistoryController::class, 'index'])->name('monitoring.index');
 Route::get('/monitoring/search', [HistoryController::class, 'search'])->name('monitoring.search');
@@ -27,6 +27,7 @@ Route::get('/monitoring/sending', [HistoryController::class, 'setData']);
 Route::get('/monitoring/updating', [HistoryController::class, 'updateData']);
 
 Route::get('/monitoring/presentation', [ArchiveController::class, 'index'])->name('monitoring.show');
+Route::get('/monitoring/presentation/print', [ArchiveController::class, 'show'])->name('monitoring.print');
 //проблема missing required parametr может заключаться в {} в роутах
 
 Auth::routes();

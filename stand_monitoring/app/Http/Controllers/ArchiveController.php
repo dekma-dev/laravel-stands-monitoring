@@ -21,22 +21,50 @@ class ArchiveController extends Controller
      */
     public function index(Archive $archive, Request $request)
     {
-
-
         $requireRFID = $request->get('RFID');
-        // $requireID = $request->get('ID');
-        $requireDate = $request->get('Date');
+        $requireID = $request->get('ID');
+        $requireDateFrom = $request->get('DateFrom');
+        $requireDateTo = $request->get('DateTo');
 
         $allEntries = Archive::withTrashed()
                     ->where('RFID', $requireRFID)
-                    ->where('updated_at', '>=' ,$requireDate)
+                    ->where('updated_at', '>=', $requireDateFrom)
+                    ->where('updated_at', '<=', $requireDateTo)
+                    ->orderBy('updated_at', 'desc')
+                    ->get();
+
+        $testPick = Archive::withTrashed()
+                    ->where('RFID', $requireRFID)
+                    ->where('updated_at', '>=', $requireDateFrom)
+                    ->where('updated_at', '<=', $requireDateTo)
                     ->orderBy('updated_at', 'desc')
                     ->get()
                     ->toArray();
 
-        if ($allEntries == null) return abort(404);
 
-        return view('monitoring.show', compact('archive', 'allEntries', 'requireDate'));       
+        if ($allEntries == null) return abort(411);
+
+        return view('monitoring.show', compact('requireID','allEntries', 'requireRFID',  'requireDateFrom', 'requireDateTo'));       
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Archive $archive, Request $request)
+    {
+        $requireRFID = $request->get('RFID');
+        $requireDateFrom = $request->get('DateFrom');
+        $requireDateTo = $request->get('DateTo');
+
+        $allEntries = Archive::withTrashed()
+                    ->where('RFID', $requireRFID)
+                    ->where('updated_at', '>=', $requireDateFrom)
+                    ->where('updated_at', '<=', $requireDateTo)
+                    ->orderBy('updated_at', 'desc')
+                    ->get()
+                    ->toArray();
+
+        return view('monitoring.print', compact( 'allEntries', 'requireDateFrom', 'requireDateTo'));           
     }
 
     /**
@@ -51,14 +79,6 @@ class ArchiveController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Archive $archive)
     {
         //
     }

@@ -5,12 +5,12 @@
   <!-- bootstrap -->
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
-  <script src="/docs/5.3/assets/js/color-modes.js"></script>
+  <!-- <script src="/docs/5.3/assets/js/color-modes.js"></script> -->
     <title>@yield('title', 'Account')</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/album/">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
-    <link href="/docs/5.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!-- <link href="/docs/5.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"> -->
     
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
@@ -122,7 +122,6 @@
 
     .form-search {
       margin-top: 7rem;
-      margin-left: 7rem;
       margin-bottom: 2rem;
       width: 1300px;
     }
@@ -197,7 +196,7 @@
         <div class="collapse text-bg-dark" id="navbarHeader">
             <div class="container">
             <div class="row">
-                <div class="col-sm-8 col-md-7 py-4">
+                <div class="col-sm-2 col-md-7 py-4">
                 <h4>Информация о пользователе</h4>
                 @auth
                 <p class="text-body-secondary">
@@ -265,8 +264,14 @@
             </div>
             </div>
         </div>
+
+        @php 
+          $route = Route::currentRouteName();
+        @endphp
+
+        @if (Route::currentRouteName() != 'monitoring.print')
         <div class="navbar navbar-dark bg-dark shadow-sm">
-            <div class="container">
+          <div class="container">
             <a href="/monitoring" class="navbar-brand d-flex align-items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                 <strong>Мониторинг</strong>
@@ -274,28 +279,31 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            </div>
-        </div>
-
-        @php 
-          $route = Route::currentRouteName();
-        @endphp
-        @if (Route::currentRouteName() == 'monitoring.index' || Route::currentRouteName() == 'monitoring.search')
-        <form name="searchInput" action="{{route('monitoring.search')}}" method="get" class="form-inline form-search pull-right">
-          <div class="input-group">
-            <input class="form-control" id="searchInput" type="text" name="RFID" placeholder="Найти метку..." style="border-radius: 10px 100px / 120px; border-width: 0px; margin-right: 5px" required>
-            <div class="input-group-btn">
-              <button type="submit" class="btn btn-primary" style="border-radius: 50% 20% / 10% 40%; border-width: 0px;">Поиск</button>
-            </div>
           </div>
-        </form>
+        </div> 
         @endif
 
-
+        @if (Route::currentRouteName() == 'monitoring.index' || Route::currentRouteName() == 'monitoring.search')
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-12 col-md-8 col-sm-10">
+          <form name="searchInput" action="{{route('monitoring.search')}}" method="get" class="form-inline form-search pull-right">
+            <div class="input-group">
+              <input class="form-control" id="searchInput" type="text" name="RFID" placeholder="Найти метку или станок..." style="border-radius: 10px 100px / 120px; border-width: 0px; margin-right: 5px" required>
+              <div class="input-group-btn">
+                <button type="submit" class="btn btn-primary" style="border-radius: 50% 20% / 10% 40%; border-width: 0px;">Поиск</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+        @endif
         </header>
+        
         <main class="py-4">
-            @yield('content')
+          @yield('content')
         </main>
     </div>
-</body>
+  </body>
 </html>

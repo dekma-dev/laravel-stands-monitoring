@@ -17,21 +17,18 @@ use Illuminate\Support\Facades\Gate;
 class HistoryController extends Controller
 {
     public function index() {
-        // DB::statement('truncate table mark_infos'); для очистки таблицы
 
         $toSortData = DB::table('archive')
         ->select('*')
         ->whereIn(DB::raw("(RFID, updated_at)"), function($query) {
             $query->select(DB::raw('RFID, MAX(updated_at)'))
+                  ->whereNull('deleted_at')
                   ->from('archive')
                   ->groupBy('RFID');
             })
-        //выборка без удаленных меток, т.к. удаленные записи багом дублируются
-        //удаленные записи мон через строку поиска посмотреть
-        ->whereNull('deleted_at')
         ->orderBy('State', 'desc')
         ->orderBy('updated_at', 'desc')
-        ->limit(10)
+        ->limit(100)
         ->get()
         ->toArray();
 
@@ -76,13 +73,10 @@ class HistoryController extends Controller
             'Country' => 'string',
         ]);
 
-        // $historyRecord = History::where('RFID', $RFIDRequest)->orderBy('updated_at', 'desc')->updateOrCreate([
-        //     'ID_stanok' => $IDStanokRequest,
-        //     'RFID' => $RFIDRequest,
-        //     'State' => $StateRequest,
-        // ], $requestData);
+        History::where('RFID', $RFIDRequest)->delete(); 
 
-        $archiveRecord = Archive::where('RFID', $RFIDRequest)->orderBy('updated_at', 'desc')->updateOrCreate([
+        $archiveRecord = Archive::where('RFID', $RFIDRequest)
+            ->orderBy('updated_at', 'desc')->updateOrCreate([
             'ID_stanok' => $IDStanokRequest,
             'RFID' => $RFIDRequest,
             'State' => $StateRequest,
@@ -93,57 +87,76 @@ class HistoryController extends Controller
 
     public function search(Request $request) {
         $input = $request->RFID;
-        $result = Archive::withTrashed()->where("RFID", "LIKE", "%{$input}%")->orderBy('State', 'desc')->orderBy('updated_at', 'desc')->Paginate(6);                                                             //->whereNull('deleted_at') поиск без учета удаленных записей
+        $result = Archive::withTrashed()
+                ->where("RFID", "LIKE", "%{$input}%")
+                ->orWhere('ID_stanok', 'LIKE', "%{$input}%")
+                ->orderBy('State', 'desc')
+                ->orderBy('updated_at', 'desc')
+                ->Paginate(6);                                                             //->whereNull('deleted_at') поиск без учета удаленных записей
         return view('monitoring.search', compact('result'));
     }
 
     public function edit(Archive $archive, Request $request) {
         $requiredRFID = $request->get('RFID');
         $requiredID = $request->get('ID');
-        $neededEntry = Archive::withTrashed()->where('RFID', $requiredRFID)->where('id', $requiredID)->get()->toArray();
+        $neededEntry = Archive::withTrashed()
+                        ->where('RFID', $requiredRFID)->where('id', $requiredID)
+                        ->get()
+                        ->toArray();
 
         return view('monitoring.edit', compact('archive', 'neededEntry', 'requiredID'));        
     }
 
-    public function update(Request $request, History $history) {
+    public function update(Request $request, Archive $archive, History $history) {
         
-        $controlRequest = $request->get('RFID');
+        $RFIDRequest = $request->get('RFID');
+        $idRequest = $request->get('id');
 
-        $historyDBDatas = $request->validate([
+        $DBDatas = $request->validate([
             'ID_stanok' => 'integer',
             'RFID' => 'string',
-            'Count' => 'integer',
             'State' => 'integer',
             'Purpose' => 'string',
             'Country' => 'string',
         ]);
 
-        History::where('RFID', $controlRequest)
-                ->latest('updated_at')
-                ->first()
-                ->updateOrFail($historyDBDatas);
+        History::where('RFID', $RFIDRequest)
+               ->delete(); 
+
+        Archive::where('RFID', $RFIDRequest)
+               ->where('id', $idRequest)
+               ->first()
+               ->updateOrFail($DBDatas);
 
         return redirect()->action([HistoryController::class, 'index']);
     }
 
-    public function destroy(History $history, Request $request) {
+    public function destroy(Archive $archive, Request $request, History $history) {
         $requireMark = $request->get('RFID');
-        History::where('RFID', $requireMark)->first()->delete();
+        $requireID = $request->get('id');
+
+        History::where('RFID', $requireMark)
+               ->delete();  
+
+        Archive::where('RFID', $requireMark)
+               ->where('id', $requireID)
+               ->delete();
         
         return redirect()->action([HistoryController::class, 'index']);
     }
 
-    public function restore(History $history, Request $request) {
+    public function restore(Archive $archive, Request $request) {
         $requireMark = $request->get('RFID');
-        History::withTrashed()->where('RFID', $requireMark)->first()->restore();
+        $requireID = $request->get('id');
+        
+        Archive::withTrashed()
+               ->where('RFID', $requireMark)
+               ->where('id', $requireID)
+               ->restore();
         
         return redirect()->action([HistoryController::class, 'index']);
     }
 
-    
-    ///Далее идут методы обработки данных с датчика непосредственно
-
-    //набросок
     public function setOrUpdateData(Request $request) {
         $controlRequest = $request->get('Mark');
 

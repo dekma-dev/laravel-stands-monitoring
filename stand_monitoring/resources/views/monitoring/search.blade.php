@@ -21,7 +21,7 @@
                 <p class="card-text">Установлена на станок: {{$result[$index]->ID_stanok}}</p>
                 <p class="card-text">Количество смыканий: {{$result[$index]->Count}}</p>
                 <div class="d-flex justify-content-between align-items-center">
-                  <a href="/monitoring/presentation?RFID={{$result[$index]->RFID}}&ID={{$result[$index]->id}}&Date={{$result[$index]->updated_at}}" class="navbar-brand d-flex align-items-center">
+                  <a href="/monitoring/presentation?RFID={{$result[$index]->RFID}}&ID={{$result[$index]->id}}&DateFrom={{$result[$index]->updated_at}}&DateTo={{$result[$index]->updated_at}}" class="navbar-brand d-flex align-items-center">
                     <button type="button" class="btn btn-sm btn-outline-secondary">Подробнее</button>
                   </a>
                   @if ($result[$index]->State == 1)
