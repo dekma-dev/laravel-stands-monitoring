@@ -23,8 +23,7 @@ Route::get('/monitoring/delete', [HistoryController::class, 'destroy'])->name('m
 Route::get('/monitoring/restore', [HistoryController::class, 'restore'])->name('monitoring.restore');
 Route::post('/monitoring', [HistoryController::class, 'store'])->name('monitoring.store');
 
-Route::get('/monitoring/sending', [HistoryController::class, 'setData']);
-Route::get('/monitoring/updating', [HistoryController::class, 'updateData']);
+Route::get('/monitoring/sending', [HistoryController::class, 'setOrUpdateData'])->name('monitoring.sending');
 
 Route::get('/monitoring/presentation', [ArchiveController::class, 'index'])->name('monitoring.show');
 Route::get('/monitoring/presentation/print', [ArchiveController::class, 'show'])->name('monitoring.print');
