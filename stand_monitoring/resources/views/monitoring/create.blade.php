@@ -6,6 +6,7 @@
 @auth
   <form class="container" action="{{route('monitoring.store')}}" method="post">
     @csrf
+    <h4>Основная информация</h4>
     <div class="form-group">
       <label for="RFIDInput">Метка</label>
       <input type="text" name="RFID" class="form-control" id="RFIDInput" placeholder="Введите метку" required>
@@ -13,10 +14,6 @@
     <div class="form-group">
       <label for="MachineInput">Номер станка</label>
       <input type="text" name="ID_stanok" class="form-control" id="MachineInput" placeholder="Введите номер станка, на который будет установлена метка (?)" required>
-    </div>
-    <div class="form-group">
-      <label for="CountInput">Количество смыканий</label>
-      <input type="text" name="Count" class="form-control" id="CountInput" placeholder="Введите количество" required>
     </div>
     <div class="form-group">
       <label for="StateInput">Состояние</label>

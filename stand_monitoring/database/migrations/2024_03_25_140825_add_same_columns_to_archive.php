@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('archives', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('archive', function (Blueprint $table) {
+            $table->integer('Condition')->nullable()->after('State');
+            $table->String('Authenticity')->after('Country');
         });
     }
 
@@ -22,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('archives');
+        Schema::table('archive', function (Blueprint $table) {
+            $table->dropColumn('Condition');
+            $table->dropColumn('Authenticity');
+        });
     }
 };

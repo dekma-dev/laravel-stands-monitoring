@@ -1,0 +1,1 @@
+mix.js('resources/js/scrollingView.js', 'public/js');

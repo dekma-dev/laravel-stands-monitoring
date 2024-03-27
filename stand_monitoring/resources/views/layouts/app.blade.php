@@ -51,6 +51,19 @@
           bs-border-color-translucent: rgba(255, 255, 255, 0.15) - border;
       } */
 
+    .hidden {
+      opacity: 0;
+      transition: all 1s ease-in-out;
+    }
+
+    .alert-icon {
+      fill: white;
+    }
+
+    .rotate-rectangle-around-icon {
+      transform: rotate(45);
+    }
+
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;

@@ -32,18 +32,20 @@ class HistoryController extends Controller
         ->get()
         ->toArray();
 
-        // $asd = DB::select("SELECT count(*) FROM histories");
-        // if ($asd > "100") dd($asd); //History::truncate();
+        $asd = DB::select("SELECT count(*) FROM histories");
+        if ($asd > "100") History::truncate();
 
         foreach ($toSortData as $record) {
             History::updateOrCreate([
                 'ID_stanok' => $record->ID_stanok,
                 'RFID' => $record->RFID,
-                'State' => $record->State, 
+                'State' => $record->State,
+                'Condition' => $record->Condition,  
             ],[
                'Count' => $record->Count,
                'Purpose' => $record->Purpose, 
                'Country' => $record->Country, 
+               'Authenticity' => $record->Authenticity,
                'created_at' => $record->created_at, 
                'updated_at' => $record->updated_at,
                'deleted_at' => $record->deleted_at
@@ -63,26 +65,30 @@ class HistoryController extends Controller
     }
 
     public function store(Request $request) {
-        $IDStanokRequest = $request->get('ID_stanok');
+        $idStanokRequest = $request->get('ID_stanok');
         $RFIDRequest = $request->get('RFID');
-        $StateRequest = $request->get('State');
+        $stateRequest = $request->get('State');
+        $conditionRequest = $request->get('Condition');
 
         $requestData = $request->validate([
             'ID_stanok' => 'integer',
             'RFID' => 'string',
             'Count' => 'integer',
             'State' => 'integer',
+            'Condition' => 'integer',
             'Purpose' => 'string',
             'Country' => 'string',
+            'Authenticity' => 'string',
         ]);
 
         History::where('RFID', $RFIDRequest)->delete(); 
 
         $archiveRecord = Archive::where('RFID', $RFIDRequest)
             ->orderBy('updated_at', 'desc')->updateOrCreate([
-            'ID_stanok' => $IDStanokRequest,
+            'ID_stanok' => $idStanokRequest,
             'RFID' => $RFIDRequest,
-            'State' => $StateRequest,
+            'State' => $stateRequest,
+            'Condition' => $conditionRequest,
         ], $requestData);
 
         return redirect()->action([HistoryController::class, 'index']);
@@ -102,7 +108,7 @@ class HistoryController extends Controller
     public function edit(Archive $archive, Request $request) {
         $requiredRFID = $request->get('RFID');
         $requiredID = $request->get('ID');
-        $neededEntry = Archive::withTrashed()
+        $neededEntry  = Archive::withTrashed()
                         ->where('RFID', $requiredRFID)->where('id', $requiredID)
                         ->get()
                         ->toArray();
@@ -119,8 +125,10 @@ class HistoryController extends Controller
             'ID_stanok' => 'integer',
             'RFID' => 'string',
             'State' => 'integer',
+            'Condition' => 'integer',
             'Purpose' => 'string',
             'Country' => 'string',
+            'Authenticity' => 'string',
         ]);
 
         History::where('RFID', $RFIDRequest)
@@ -161,16 +169,13 @@ class HistoryController extends Controller
     }
 
     public function setOrUpdateData(Request $request) {
-        $IDStanokRequest = $request->get('ID_stanok');
         $RFIDRequest = $request->get('RFID');
+        $IDStanokRequest = $request->get('ID_stanok');
         $StateRequest = $request->get('State');
-        // $countRequest = $request->get('Count');
-        // $purposeRequest = $request->get('Purpose');
-        // $countryRequest = $request->get('Country');
 
         $requestData = $request->validate([
-            'ID_stanok' => 'integer',
             'RFID' => 'string',
+            'ID_stanok' => 'integer',
             'Count' => 'integer',
             'State' => 'integer',
             'Purpose' => 'string',
@@ -181,29 +186,11 @@ class HistoryController extends Controller
 
         $archiveRecord = Archive::where('RFID', $RFIDRequest)
             ->orderBy('updated_at', 'desc')->updateOrCreate([
-            'ID_stanok' => $IDStanokRequest,
             'RFID' => $RFIDRequest,
+            'ID_stanok' => $IDStanokRequest,
             'State' => $StateRequest,
         ], $requestData);
 
-        // $markInfosDBDatas = $request->validate([
-        //     'Mark' => 'string',
-        //     'Purpose' => 'string',
-        //     'Country' => 'string',
-        // ]);
-        // $historyDBDatas = $request->validate([
-        //     'ID_stanok' => 'integer',
-        //     'RFID' => 'string',
-        //     'Count' => 'integer',
-        //     'State' => 'integer',
-        // ]);
-
-        // MarkInfo::updateOrCreate([
-        //     'Mark' => $controlRequest,
-        // ], $markInfosDBDatas);
-        // History::updateOrCreate([
-        //     'RFID' => $controlRequest,
-        // ], $historyDBDatas);
     }
 
     public function deleteData() {

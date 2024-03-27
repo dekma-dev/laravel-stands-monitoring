@@ -33,11 +33,12 @@
 
   <thead>
     <tr>
-    <th scope="col">Состояние</th>
+    <th scope="col">Положение</th>
     <th scope="col">Метка</th>
     <th scope="col">Номер станка</th>
     <th scope="col">Смыкания</th>
     <th scope="col">Предназначение</th>
+    <th scope="col">Состояние</th>
     <th scope="col">Добавлена</th>
     <th scope="col">Обновлена</th>
     <th scope="col">Удалена</th>
@@ -73,6 +74,7 @@
         <td>{{$allEntries[$index]['ID_stanok']}}</td>
         <td>{{$allEntries[$index]['Count']}}</td>
         <td>{{$allEntries[$index]['Purpose']}}</td>
+        <td>{{$allEntries[$index]['Condition']}}%</td>
         <td>{{$createdDate}}</td>
         <td>{{$updatedDate}}</td>
         <td>{{$allEntries[$index]['deleted_at'] == null ? "-" : $deletedDate}}</td>
@@ -111,6 +113,7 @@
       <div class="container">
         <p class="float-end mb-1">
         <div class="dropdown">
+          <a id="scrollButton" class="nav-link hidden" href="#" class="button">Наверх</a>
           <button class="btn btn-dark" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" onclick="printReport()">
             Сделать отчёт
           </button>
