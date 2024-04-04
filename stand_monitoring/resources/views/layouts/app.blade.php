@@ -60,10 +60,6 @@
       fill: white;
     }
 
-    .rotate-rectangle-around-icon {
-      transform: rotate(45);
-    }
-
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;

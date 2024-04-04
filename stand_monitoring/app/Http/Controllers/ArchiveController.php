@@ -33,23 +33,12 @@ class ArchiveController extends Controller
                     ->orderBy('updated_at', 'desc')
                     ->get();
 
-        $testPick = Archive::withTrashed()
-                    ->where('RFID', $requireRFID)
-                    ->where('updated_at', '>=', $requireDateFrom)
-                    ->where('updated_at', '<=', $requireDateTo)
-                    ->orderBy('updated_at', 'desc')
-                    ->get()
-                    ->toArray();
-
 
         if ($allEntries == null) return abort(411);
 
         return view('monitoring.show', compact('requireID','allEntries', 'requireRFID',  'requireDateFrom', 'requireDateTo'));       
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Archive $archive, Request $request)
     {
         $requireRFID = $request->get('RFID');
