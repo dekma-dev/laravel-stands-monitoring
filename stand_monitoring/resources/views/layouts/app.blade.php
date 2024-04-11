@@ -40,6 +40,7 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/scrollingView.js'])
 
     
     <style>
@@ -50,6 +51,26 @@
           bs-border-color: #495057,
           bs-border-color-translucent: rgba(255, 255, 255, 0.15) - border;
       } */
+    .tooltip {
+      position: fixed;
+      z-index: 9999;
+      max-width: 200px; /* Максимальная ширина подсказки */
+      opacity: 0;
+      transition: opacity 0.75s;
+    }
+
+    .custom-tooltip {
+      position: fixed;
+      z-index: 9999;
+      background: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    .tooltip.show {
+      opacity: 1;
+    }
 
     .hidden {
       opacity: 0;

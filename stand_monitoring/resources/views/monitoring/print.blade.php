@@ -9,11 +9,10 @@
     $datepicker2 = substr($requireDateTo, 0, 10);
 @endphp
 
-<div class="container col-xs-12 col-md-0" style="margin-top:100px; font-size:19px; text-align: center">
+<div class="container col-xs-12 col-md-0" style="margin-top:50px; font-size:19px; text-align: center">
     <table class="table table-striped table-hover align-items-center">
     <h2 class="mb-5">Информация о работе метки <b>{{$allEntries[0]['RFID']}}</b></h2>
 
-<!-- paste the datepicker -->
     <section class="container">
       <div class="row form-group">
         <div class="container mt-5">
@@ -24,16 +23,18 @@
             <input type="date" id="datepickerTo" name="DateTo" class="form-control" value="{{$datepicker2}}" required>
           </div>
           </form>
-      </div>
+        </div>
     </section>
 
     <thead>
     <tr>
-    <th scope="col">Состояние</th>
+    <th scope="col">Положение</th>
     <th scope="col">Метка</th>
     <th scope="col">Номер станка</th>
     <th scope="col">Смыкания</th>
     <th scope="col">Предназначение</th>
+    <th scope="col">Состояние</th>
+    <th scope="col">Отработала</th>
     <th scope="col">Добавлена</th>
     <th scope="col">Обновлена</th>
     <th scope="col">Удалена</th>
@@ -62,6 +63,8 @@
       $createdDate = substr($allEntries[$index]['created_at'], 0, 10)." ".substr($allEntries[$index]['created_at'], 11, 8);
       $updatedDate = substr($allEntries[$index]['updated_at'], 0, 10)." ".substr($allEntries[$index]['updated_at'], 11, 8);
       $deletedDate = substr($allEntries[$index]['deleted_at'], 0, 10)." ".substr($allEntries[$index]['updated_at'], 11, 8);
+
+      $calculatedWorkTime = substr($allEntries[$index]['worktime'] / 3600, 0, 4);
       @endphp
 
         <tr>
@@ -70,6 +73,8 @@
         <td>{{$allEntries[$index]['ID_stanok']}}</td>
         <td>{{$allEntries[$index]['Count']}}</td>
         <td>{{$allEntries[$index]['Purpose']}}</td>
+        <td>{{$allEntries[$index]['Condition']}}%</td>
+        <td>{{$calculatedWorkTime}} ч</td>
         <td>{{$createdDate}}</td>
         <td>{{$updatedDate}}</td>
         <td>{{$allEntries[$index]['deleted_at'] == null ? "-" : $deletedDate}}</td>

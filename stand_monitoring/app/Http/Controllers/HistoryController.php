@@ -58,7 +58,8 @@ class HistoryController extends Controller
                 'RFID' => $record->RFID,
                 'State' => $record->State, 
             ],[
-               'Condition' => $record->Condition, 
+               'Condition' => $record->Condition,
+               'worktime' => $record->worktime, 
                'Count' => $record->Count,
                'Purpose' => $record->Purpose, 
                'Country' => $record->Country, 
@@ -202,6 +203,7 @@ class HistoryController extends Controller
             'RFID' => 'string',
             'ID_stanok' => 'integer',
             'Count' => 'integer',
+            'WorkTime' => 'integer',
             'State' => 'integer',
             'Purpose' => 'string',
             'Country' => 'string',

@@ -7,8 +7,8 @@
     <table class="table table-striped table-hover align-items-center">
     <h2 class="mb-5">Информация о работе метки
     @if($allEntries[0]['Authenticity'] == "False")
-      <svg x="10" y="10" class="alert-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-exclamation-diamond" viewBox="-2 -2 20 20"><g fill="#eb7a34"><rect class="rotate-rectangle-around-icon" x="4.8" y="-6.5" width="13" height="13" transform="rotate(45)"/></g><path d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.48 1.48 0 0 1 0-2.098zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z"/><path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/></svg>
-      <b title="Неопознанная метка, обратитесь к администратору!" >{{$allEntries[0]['RFID']}}</b>
+      <svg x="10" y="10" class="alert-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-exclamation-diamond" viewBox="-2 -2 20 20"><g fill="#eb7a34"><rect class="rotate-rectangle-around-icon" x="4.8" y="-6.5" width="13" height="13" transform="rotate(45)"/></g><path d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.48 1.48 0 0 1 0-2.098zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z"/><path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/></svg><g  data-bs-toggle="tooltip" data-bs-placement="top" title="Неопознанная метка, обратитесь к администратору!">
+      <b>{{$allEntries[0]['RFID']}}</b></g>
       <svg x="10" y="10" class="alert-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-exclamation-diamond" viewBox="-2 -2 20 20"><g fill="#eb7a34"><rect class="rotate-rectangle-around-icon" x="4.8" y="-6.5" width="13" height="13" transform="rotate(45)"/></g><path d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.48 1.48 0 0 1 0-2.098zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z"/><path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/></svg>
     @else <b>{{$allEntries[0]['RFID']}}</b>
     @endif
@@ -16,6 +16,7 @@
     @if($allEntries[0]['Authenticity'] == "False")
 
     @endif
+  </div>
 
   <!-- второе использование тегов php обусловлено необходимостью вставки даты в datepicker до дисплея таблицы -->
   @php
@@ -38,7 +39,8 @@
           @endif
             <button type="submit" class="btn btn-primary">Выбрать</button>
           </form>
-      </div>
+        </div>   
+      </div> 
     </section>
 
   <thead>
@@ -49,6 +51,7 @@
     <th scope="col">Смыкания</th>
     <th scope="col">Предназначение</th>
     <th scope="col">Состояние</th>
+    <th scope="col">Отработала</th>
     <th scope="col">Добавлена</th>
     <th scope="col">Обновлена</th>
     <th scope="col">Удалена</th>
@@ -76,6 +79,8 @@
       $createdDate = substr($allEntries[$index]['created_at'], 0, 10)." ".substr($allEntries[$index]['created_at'], 11, 8);
       $updatedDate = substr($allEntries[$index]['updated_at'], 0, 10)." ".substr($allEntries[$index]['updated_at'], 11, 8);
       $deletedDate = substr($allEntries[$index]['deleted_at'], 0, 10)." ".substr($allEntries[$index]['updated_at'], 11, 8);
+
+      $calculatedWorkTime = substr($allEntries[$index]['worktime'] / 3600, 0, 4);
       @endphp
 
         <tr>
@@ -85,6 +90,7 @@
         <td>{{$allEntries[$index]['Count']}}</td>
         <td>{{$allEntries[$index]['Purpose']}}</td>
         <td>{{$allEntries[$index]['Condition']}}%</td>
+        <td>{{$calculatedWorkTime}} ч</td>
         <td>{{$createdDate}}</td>
         <td>{{$updatedDate}}</td>
         <td>{{$allEntries[$index]['deleted_at'] == null ? "-" : $deletedDate}}</td>
