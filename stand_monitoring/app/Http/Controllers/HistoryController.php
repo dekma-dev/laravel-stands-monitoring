@@ -159,7 +159,7 @@ class HistoryController extends Controller
             
         History::where('RFID', $RFIDRequest)
                ->delete(); 
-
+            
         Archive::where('RFID', $RFIDRequest)
                ->where('id', $idRequest)
                ->first()

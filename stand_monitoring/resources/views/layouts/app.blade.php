@@ -44,13 +44,17 @@
 
     
     <style>
-      /* rect {
-        fill: #0a1e32;  
-          rgb(85, 89, 92), 
-          #212529 - natives gray color; 
-          bs-border-color: #495057,
-          bs-border-color-translucent: rgba(255, 255, 255, 0.15) - border;
-      } */
+
+    .table {
+      margin-left: auto;
+      margin-right: auto;
+      /* padding-right: auto;
+      padding-left: auto; */
+      width: 75%;
+      max-width: 15px;
+      font-size: 18.5px;
+    }
+
     .tooltip {
       position: fixed;
       z-index: 9999;
@@ -314,19 +318,15 @@
         @endif
 
         @if (Route::currentRouteName() == 'monitoring.index' || Route::currentRouteName() == 'monitoring.search')
-      <div class="container">
-        <div class="row justify-content-center">
           <div class="col-lg-12 col-md-8 col-sm-10">
-          <form name="searchInput" action="{{route('monitoring.search')}}" method="get" class="form-inline form-search pull-right">
+          <form name="searchInput" style="max-width: 100%; width: 85%; margin-left: auto; margin-right: auto; padding-left: auto; padding-right: auto;" action="{{route('monitoring.search')}}" method="get" class="form-inline form-search pull-right">
             <div class="input-group">
-              <input class="form-control" id="searchInput" type="text" name="RFID" placeholder="Найти метку или станок..." style="border-radius: 10px 100px / 120px; border-width: 0px; margin-right: 5px" required>
+              <input class="form-control" id="searchInput" type="text" name="RFID" placeholder="Найти метку или станок..." style="      border-radius: 10px 100px / 120px; border-width: 0px; margin-right: 5px;" required>
               <div class="input-group-btn">
                 <button type="submit" class="btn btn-primary" style="border-radius: 50% 20% / 10% 40%; border-width: 0px;">Поиск</button>
               </div>
             </div>
           </form>
-        </div>
-      </div>
     </div>
         @endif
         </header>
