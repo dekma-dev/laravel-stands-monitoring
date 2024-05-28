@@ -33,7 +33,6 @@ class ArchiveController extends Controller
                     ->orderBy('updated_at', 'desc')
                     ->get();
 
-
         if ($allEntries == null) return abort(411);
 
         return view('monitoring.show', compact('requireID','allEntries', 'requireRFID',  'requireDateFrom', 'requireDateTo'));       

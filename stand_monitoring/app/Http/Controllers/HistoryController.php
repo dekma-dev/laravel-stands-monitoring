@@ -20,6 +20,7 @@ class HistoryController extends Controller
 
         $falseRFIDQuery = DB::select("SELECT RFID FROM archive WHERE Authenticity = 'False'");
         
+        //обновление подлинности меток
         if (!empty($falseRFIDQuery)) {
             $uniqueRFID = array_values(array_unique($falseRFIDQuery, false));
             
@@ -35,6 +36,21 @@ class HistoryController extends Controller
             }
         }
 
+        //обновление состояний меток
+        $allEntries = Archive::all();
+        foreach ($allEntries as $key => $entry) {
+            $currentCondition = $entry[$key]["Condition"];
+            /*
+            Состояние метки рассчитывается исходя из данных об износе - количестве смыканий Count,
+            однако числитель может быть заменен на время работы - Worktime,
+            а знаменатель - предел работоспособности метки, т.е., например, её хватает на 100к смыканий
+            */
+            $condition = ($currentCondition - ($entry->Count / 100000)) * 100;
+
+            DB::select("UPDATE `archive` SET `Condition` = $condition WHERE `id` = $entry->id");
+        }
+
+        //выборка уникальных данных из архива
         $toSortData = DB::table('archive')
         ->select('*')
         ->whereIn(DB::raw("(RFID, updated_at)"), function($query) {
@@ -49,9 +65,11 @@ class HistoryController extends Controller
         ->get()
         ->toArray();
 
+        //очистка таблицы histories
         $overloadData = DB::select("SELECT count(*) FROM histories");
         if ($overloadData > "100") History::truncate();
 
+        //перенос из archive в histories актуальных уникальных данных
         foreach ($toSortData as $record) {
             History::updateOrCreate([
                 'ID_stanok' => $record->ID_stanok,
@@ -218,15 +236,5 @@ class HistoryController extends Controller
             'State' => $StateRequest,
         ], $requestData);
 
-    }
-
-    public function deleteData() {
-        // $data = MarkInfo::withTrashed()->find(34); //поиск с учетом softDelete
-        // $data->restore();
-
-        // $dataMark = MarkInfo::find(39);
-        $dataHistory = History::find(17);
-        // $dataMark->delete(); //софт делит уже установлен в моделе. 
-        $dataHistory->delete(); //софт делит уже установлен в моделе. 
     }
 }
