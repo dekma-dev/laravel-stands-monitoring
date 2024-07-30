@@ -9,6 +9,6 @@ class ArchiveSeeder extends Seeder
 {
     public function run()
     {
-        Archive::factory()->count(50)->create();
+        \App\Models\Archive::factory()->count(250)->create();
     }
 }

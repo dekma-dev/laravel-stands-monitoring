@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('archive', function (Blueprint $table) {
             $table->id();
             $table->integer('ID_stanok');
-            $table->text('Mark');
+            $table->text('RFID');
             $table->integer('Count')->nullable();
             $table->boolean('State');
-            $table->text('Purpose');
-            $table->text('Country');
+            $table->float('Condition')->nullable()->default(100);
+            $table->integer('worktime');
+            $table->text('Purpose')->nullable();
+            $table->text('Country')->nullable();
+            $table->String('Authenticity')->default('False');
             $table->timestamps();
 
             $table->softDeletes();
