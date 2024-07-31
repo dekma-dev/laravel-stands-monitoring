@@ -15,27 +15,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use App\Events\UpdateConditionEvent;
 
+/*
+----------------Документация---------------
+она в файле readme.md на гите
+*/
+
 class HistoryController extends Controller
 {
     public function index() {
-
-        $falseRFIDQuery = DB::select("SELECT RFID FROM archive WHERE Authenticity = 'False'");
-
-        //обновление подлинности меток
-        if (!empty($falseRFIDQuery)) {
-            $uniqueRFID = array_values(array_unique($falseRFIDQuery, false));
-            
-            for ($index = 0; $index < count($uniqueRFID); $index++) {
-                $uniquePick = $uniqueRFID[$index]->RFID;
-                $allData = Archive::select('*')->where('RFID', $uniquePick)->get()->toArray();
-                
-                for ($entry = 0; $entry < count($allData); $entry++) { 
-                    DB::table('archive')
-                        ->where('id',$allData[$entry]["id"])
-                        ->update(['Authenticity' => 'False']);
-                }
-            }
-        }
 
         //выборка уникальных данных из архива
         $toSortData = DB::table('archive')
@@ -143,6 +130,7 @@ class HistoryController extends Controller
 
         $RFIDRequest = $request->get('RFID');
         $idRequest = $request->get('id');
+        $allData = Archive::select('*')->where('RFID', $RFIDRequest)->get()->toArray();
 
         $DBDatas = $request->validate([
             'ID_stanok' => 'integer',
@@ -153,15 +141,21 @@ class HistoryController extends Controller
             'Country' => 'string',
             'Authenticity' => 'string',
         ]);
-        
-        if ($DBDatas["Authenticity"] == "True") {
-                $allData = Archive::select('*')->where('RFID', $RFIDRequest)->get()->toArray();
-                for ($entry = 0; $entry < count($allData); $entry++) { 
-                    DB::table('archive')
-                        ->where('id',$allData[$entry]["id"])
-                        ->update(['Authenticity' => 'True']);
-                }
-            } 
+
+        if ($request->get("Authenticity") != $allData[0]["Authenticity"] && $DBDatas["Authenticity"] == "True") {
+            for ($entry = 0; $entry < count($allData); $entry++) { 
+                DB::table('archive')
+                    ->where('id',$allData[$entry]["id"])
+                    ->update(['Authenticity' => 'True']);
+            }
+        } 
+        else if ($request->get("Authenticity") != $allData[0]["Authenticity"] && $DBDatas["Authenticity"] == "False") {
+            for ($entry = 0; $entry < count($allData); $entry++) { 
+                DB::table('archive')
+                    ->where('id',$allData[$entry]["id"])
+                    ->update(['Authenticity' => 'False']);
+            }
+        }
             
         History::where('RFID', $RFIDRequest)
                ->delete(); 

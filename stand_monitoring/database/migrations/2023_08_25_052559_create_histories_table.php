@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('worktime');
             $table->text('Purpose');
             $table->text('Country');
-            $table->String('Authenticity');
+            $table->string('Authenticity')->nullable();
             $table->timestamps();
 
             $table->softDeletes();

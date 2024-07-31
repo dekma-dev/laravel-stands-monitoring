@@ -15,7 +15,7 @@ class ArchiveFactory extends Factory
     public function definition()
     {
         return [
-            'ID_stanok' => $this->faker->unique()->numberBetween(1,100),
+            'ID_stanok' => $this->faker->unique()->numberBetween(1,1000),
             'RFID' => $this->faker->unique()->text(10), // Генерирование случайной строки
             'Count' => $this->faker->numberBetween(0,10000),
             'State' => $this->faker->numberBetween(0, 1),
@@ -23,7 +23,7 @@ class ArchiveFactory extends Factory
             'worktime' => $this->faker->numberBetween(0,1000),
             'Purpose' => $this->faker->name(),
             'Country' => $this->faker->name(),
-            'Authenticity' => True
+            'Authenticity' => "True"
         ];
     }
 }
