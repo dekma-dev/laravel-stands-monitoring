@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('Count')->nullable();
             $table->boolean('State');
             $table->float('Condition')->nullable()->default(100);
-            $table->integer('worktime');
+            $table->integer('worktime')->default(0);
             $table->text('Purpose')->nullable();
             $table->text('Country')->nullable();
             $table->string('Authenticity')->nullable();

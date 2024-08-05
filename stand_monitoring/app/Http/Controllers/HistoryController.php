@@ -14,58 +14,50 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use App\Events\UpdateConditionEvent;
+use Illuminate\Support\Facades\Hash;
 
 /*
 ----------------Документация---------------
-она в файле readme.md на гите
+        она в файле readme.md на гите
 */
 
 class HistoryController extends Controller
 {
-    public function index() {
+        public function index() {
 
-        //выборка уникальных данных из архива
         $toSortData = DB::table('archive')
         ->select('*')
-        ->whereIn(DB::raw("(RFID, updated_at)"), function($query) {
-            $query->select(DB::raw('RFID, MAX(updated_at)'))
-                  ->whereNull('deleted_at')
-                  ->from('archive')
-                  ->groupBy('RFID');
-            })
-        ->orderBy('State', 'desc')
+        ->whereNull('deleted_at')
         ->orderBy('updated_at', 'desc')
+        ->orderBy('State', 'desc')
         ->limit(100)
         ->get()
         ->toArray();
-
-        //очистка таблицы histories
+        
         $overloadData = DB::select("SELECT count(*) FROM histories");
         if ($overloadData > "100") History::truncate();
 
-        //перенос из archive в histories актуальных уникальных данных
         foreach ($toSortData as $record) {
             History::updateOrCreate([
                 'ID_stanok' => $record->ID_stanok,
                 'RFID' => $record->RFID,
                 'State' => $record->State, 
             ],[
-               'Condition' => $record->Condition,
-               'worktime' => $record->worktime, 
-               'Count' => $record->Count,
-               'Purpose' => $record->Purpose, 
-               'Country' => $record->Country, 
-               'Authenticity' => $record->Authenticity,
-               'created_at' => $record->created_at, 
-               'updated_at' => $record->updated_at,
-               'deleted_at' => $record->deleted_at
+            'Condition' => $record->Condition,
+            'worktime' => $record->worktime, 
+            'Count' => $record->Count,
+            'Purpose' => $record->Purpose, 
+            'Country' => $record->Country, 
+            'Authenticity' => $record->Authenticity,
+            'created_at' => $record->created_at, 
+            'updated_at' => $record->updated_at,
+            'deleted_at' => $record->deleted_at
             ]);
         }
 
         return view('monitoring.index', [
             'sorted'=> DB::table('histories')
                     ->orderBy('State', 'desc')
-                    ->orderBy('updated_at', 'desc')
                     ->Paginate(6)
         ]);                   
     }
