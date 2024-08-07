@@ -127,7 +127,7 @@ class HistoryController extends Controller
         $DBDatas = $request->validate([
             'ID_stanok' => 'integer',
             'RFID' => 'string',
-            'State' => 'integer',
+            'State' => 'string',
             'Condition' => 'integer',
             'Purpose' => 'string',
             'Country' => 'string',

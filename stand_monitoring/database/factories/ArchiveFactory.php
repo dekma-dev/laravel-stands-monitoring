@@ -14,11 +14,13 @@ class ArchiveFactory extends Factory
 
     public function definition()
     {
+        $options = ["Установлена", "Не установлена"];
+
         return [
             'ID_stanok' => $this->faker->numberBetween(1,1000),
             'RFID' => $this->faker->text(10), // Генерирование случайной строки
             'Count' => $this->faker->numberBetween(0,10000),
-            'State' => $this->faker->numberBetween(0, 1),
+            'State' => $this->faker->randomElement($options),
             'Condition' => 100.0,
             'worktime' => $this->faker->numberBetween(0,1000),
             'Purpose' => $this->faker->name(),

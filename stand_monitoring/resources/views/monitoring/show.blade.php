@@ -66,11 +66,11 @@
       $state = "Удалена";
       $color = "#828282";
     } 
-    else if ($state == 1) {
+    else if ($state == "Установлена") {
       $state = "Установлена";
       $color = "#beface";
     }
-    else if ($state == 0) {
+    else if ($state == "Не установлена") {
       $state = "Не установлена";
       $color = "#fc2d2d";
     }
