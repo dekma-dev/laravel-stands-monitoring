@@ -25,8 +25,8 @@ class UserSeeder extends Seeder
         $user1 = new User();
         $user1->name = 'Main';
         $user1->email = 'main@gmail.com';
-        $user1->Role = 'Администратор';
         $user1->password = '12345';
+        $user1->Role = "Администратор";
         $user1->save();
         $user1->roles()->attach($admin);
         $user1->permissions()->attach($all);
@@ -34,8 +34,8 @@ class UserSeeder extends Seeder
         $user2 = new User();
         $user2->name = 'Андрей Михеев';
         $user2->email = 'andrey_mih@gmail.com';
-        $user2->Role = 'Оператор';
         $user2->password = '1';
+        $user2->Role = "Оператор";
         $user2->save();
         $user2->roles()->attach($operator);
         $user2->permissions()->attach($monitoring);

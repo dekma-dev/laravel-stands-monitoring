@@ -16,7 +16,7 @@ class RoleSeeder extends Seeder
     {
         $operator = new Role();
         $operator->name = 'Operator';
-        $operator->slug = 'operator';
+        $operator->slug = 'operator';   
         $operator->save();
 
         $admin = new Role();

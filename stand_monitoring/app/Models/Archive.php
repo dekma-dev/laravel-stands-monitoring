@@ -10,7 +10,17 @@ class Archive extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    // public $timestamps = false;
 
     protected $table = 'archive';
     protected $guarded = [];
+
+    // public function getTimeStamps() 
+    // { 
+    //     return $this->timestamps;
+    // }
+    // public function setTimeStamps($value) 
+    // {
+    //     $this->timestamps = $value;
+    // }
 }

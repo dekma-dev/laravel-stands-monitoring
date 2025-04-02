@@ -17,12 +17,12 @@
       <div class="container mt-5">
         <h2>Установленная дата</h2>
         <form method="get">
-        <div class="form-group">
-          <input type="date" id="datepickerFrom" name="DateFrom" class="form-control" value="{{$datepicker1}}" required>
-          <input type="date" id="datepickerTo" name="DateTo" class="form-control" value="{{$datepicker2}}" required>
-        </div>
+          <div class="form-group">
+            <input type="datetime-local" id="datepickerFrom" name="DateFrom" class="form-control" value="{{$requireDateFrom}}" required>
+            <input type="datetime-local" id="datepickerTo" name="DateTo" class="form-control" value="{{$requireDateTo}}" required>
+          </div>
         </form>
-        </div>
+      </div>
   </section>
 </div>
 
@@ -47,16 +47,17 @@
     
     @php
     $state = $allEntries[$index]['State'];
+    $color = null;
 
     if ($allEntries[$index]['deleted_at'] != null) {
       $state = "Удалена";
       $color = "#828282";
     } 
-    else if ($state == 1) {
+    else if ($state == "Установлена") {
       $state = "Установлена";
       $color = "#beface";
     }
-    else if ($state == 0) {
+    else if ($state == "Не установлена") {
       $state = "Не установлена";
       $color = "#fc2d2d";
     }
