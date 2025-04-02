@@ -16,15 +16,45 @@ use Illuminate\Support\Facades\Gate;
 
 class ArchiveController extends Controller
 {
-    /**
-     * Display the latest 10 records from archive table.
-     */
+    //show method
     public function index(Archive $archive, Request $request)
     {
         $requireRFID = $request->get('RFID');
         $requireID = $request->get('ID');
         $requireDateFrom = $request->get('DateFrom');
         $requireDateTo = $request->get('DateTo');
+
+        $requestData = $request->validate([
+            'RFID' => 'string',
+            'ID' => 'integer',
+            'DateFrom' => 'string',
+            'DateTo' => 'string',
+        ]);
+
+        /*
+        Блок кода, нацеленный на синхронизацию аутентификации меток
+        то есть, чтобы у всех записей с одной RFID было True / False.
+        Но этот блок приводит к постоянному обновлению при заходе на monitoring.show() и как следствие поёёломке всей логики приложения
+        $markedEntry = Archive::withTrashed()
+                     ->where('RFID', $requireRFID)
+                     ->orderBy('updated_at', 'desc')
+                    //  ->first();
+                     ->get();
+
+        foreach ($markedEntry as $entry) {
+            if ($markedEntry[0]["Authenticity"] == "False") {
+                Archive::withTrashed()
+                ->where("id", $entry["id"])
+                ->update(["Authenticity" => "False"]);
+            }
+            else {
+                Archive::withTrashed()
+                ->where("id", $entry["id"])
+                ->update(["Authenticity" => "True"]);
+            }
+        }
+        */
+
 
         $allEntries = Archive::withTrashed()
                     ->where('RFID', $requireRFID)
@@ -33,11 +63,12 @@ class ArchiveController extends Controller
                     ->orderBy('updated_at', 'desc')
                     ->get();
 
-        if ($allEntries == null) return abort(411);
+        if ($allEntries->count() == 0) abort(411);
 
-        return view('monitoring.show', compact('requireID','allEntries', 'requireRFID',  'requireDateFrom', 'requireDateTo'));       
+        return view('monitoring.show', compact('requireID','allEntries', 'requireRFID',  'requireDateFrom', 'requireDateTo'));
     }
 
+    //print method
     public function show(Archive $archive, Request $request)
     {
         $requireRFID = $request->get('RFID');

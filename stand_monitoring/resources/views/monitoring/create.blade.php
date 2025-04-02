@@ -17,7 +17,10 @@
     </div>
     <div class="form-group">
       <label for="StateInput">Состояние</label>
-      <input type="text" title="Введите 1 или 0" name="State" class="form-control" id="StateInput" placeholder="Введите состояние в виде 1 (активного) или 0 (не активного)"  onfocus="this.value='1'" required>
+      <select id="StateInput" data-bs-toggle="tooltip"        data-bs-placement="bottom" name="State" class="form-control" title="Выберите из списка установлена метка или нет на данный момент." required>
+        <option>Установлена</option>
+        <option>Не установлена</option>
+      </select>
     </div>
     <hr/>
     <h4>Дополнительная информация</h4>

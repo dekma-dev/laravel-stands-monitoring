@@ -16,12 +16,12 @@ return new class extends Migration
             $table->integer('ID_stanok');
             $table->text('RFID');
             $table->integer('Count')->nullable();
-            $table->boolean('State');
-            $table->float('Condition')->nullable();
-            $table->integer('worktime');
-            $table->text('Purpose');
-            $table->text('Country');
-            $table->String('Authenticity');
+            $table->string('State');
+            $table->float('Condition')->nullable()->default(100);
+            $table->integer('worktime')->default(0);
+            $table->text('Purpose')->nullable();
+            $table->text('Country')->nullable();
+            $table->string('Authenticity')->nullable();
             $table->timestamps();
 
             $table->softDeletes();

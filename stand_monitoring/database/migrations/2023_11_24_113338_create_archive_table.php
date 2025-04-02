@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('archive', function (Blueprint $table) {
             $table->id();
-            $table->integer('ID_stanok');
-            $table->text('RFID');
-            $table->integer('Count')->nullable();
-            $table->boolean('State');
-            $table->float('Condition')->nullable()->default(100);
-            $table->integer('worktime');
+            $table->integer('ID_stanok')->nullable();
+            $table->text('RFID')->nullable();
+            $table->integer('Count')->default(1);
+            $table->string('State')->nullable();
+            $table->float('Condition')->default(100.0)->nullable();
+            $table->integer('worktime')->default(1);
             $table->text('Purpose')->nullable();
             $table->text('Country')->nullable();
-            $table->String('Authenticity')->default('False');
+            $table->string('Authenticity')->default("False")->nullable();
             $table->timestamps();
 
             $table->softDeletes();
