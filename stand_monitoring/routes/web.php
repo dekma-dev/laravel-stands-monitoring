@@ -25,6 +25,7 @@ Route::get('/monitoring/restore', [HistoryController::class, 'restore'])->name('
 Route::post('/monitoring', [HistoryController::class, 'store'])->name('monitoring.store');
 
 Route::get('/monitoring/sending', [HistoryController::class, 'setOrUpdateData'])->name('monitoring.sending');
+Route::patch('/monitoring/sending', [HistoryController::class, 'UpdateConditions'])->name('monitoring.upd');
 
 Route::get('/monitoring/presentation', [ArchiveController::class, 'index'])->name('monitoring.show');
 Route::get('/monitoring/presentation/print', [ArchiveController::class, 'show'])->name('monitoring.print');
