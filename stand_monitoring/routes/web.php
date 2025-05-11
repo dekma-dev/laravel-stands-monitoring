@@ -15,7 +15,6 @@ Route::get('/monitoring', [HistoryController::class, 'index'])->name('monitoring
 Route::get('/monitoring/search', [HistoryController::class, 'search'])->name('monitoring.search');
 Route::get('/monitoring/create', [HistoryController::class, 'create'])->name('monitoring.create');
 Route::get('/monitoring/edit', [HistoryController::class, 'edit'])->name('monitoring.edit');
-// вместо update используется store action, суть та же, но архитектура не по конвенции laravel
 Route::patch('/monitoring', [HistoryController::class, 'update'])->name('monitoring.update');
 Route::get('/monitoring/deleting', [HistoryController::class, 'deleteData'])->name('monitoring.deleteData');
 //delete по конвенции /monitoring с методом delete, обработчик - action with route, а у меня параша какая-то
@@ -25,11 +24,10 @@ Route::get('/monitoring/restore', [HistoryController::class, 'restore'])->name('
 Route::post('/monitoring', [HistoryController::class, 'store'])->name('monitoring.store');
 
 Route::get('/monitoring/sending', [HistoryController::class, 'setOrUpdateData'])->name('monitoring.sending');
-Route::patch('/monitoring/sending', [HistoryController::class, 'UpdateConditions'])->name('monitoring.upd');
 
 Route::get('/monitoring/presentation', [ArchiveController::class, 'index'])->name('monitoring.show');
 Route::get('/monitoring/presentation/print', [ArchiveController::class, 'show'])->name('monitoring.print');
-//проблема missing required parametr может заключаться в {} в роутах
+//проблема missing required parameter может заключаться в {} в роутах
 
 Auth::routes();
 

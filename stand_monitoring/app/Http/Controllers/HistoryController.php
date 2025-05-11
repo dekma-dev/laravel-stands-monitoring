@@ -197,20 +197,14 @@ class HistoryController extends Controller
         $CountRequest = $request->get('Count');
 
         $requestData = $request->validate([
-            // 'RFID' => 'string',
-            // 'ID_stanok' => 'integer',
             'Count' => 'integer',
             'WorkTime' => 'integer',
-            // 'State' => 'string',
             'Purpose' => 'string',
             'Country' => 'string',
-            // 'Condition' => 'float'
         ]); 
 
         $curMark = Archive::where('RFID', $RFIDRequest)->where('ID_stanok', $IDStanokRequest)->orderBy('updated_at', 'desc')->get();
 
-        //отключить softdeletes
-         
         if (count($curMark) > 0) {
             $idString = (string)$curMark[0]->id;
             $curRecord = DB::select("SELECT * FROM archive WHERE id = '$idString'");
