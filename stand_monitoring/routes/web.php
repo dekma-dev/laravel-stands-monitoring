@@ -19,7 +19,6 @@ Route::patch('/monitoring', [HistoryController::class, 'update'])->name('monitor
 Route::get('/monitoring/deleting', [HistoryController::class, 'deleteData'])->name('monitoring.deleteData');
 //delete по конвенции /monitoring с методом delete, обработчик - action with route, а у меня параша какая-то
 Route::get('/monitoring/delete', [HistoryController::class, 'destroy'])->name('monitoring.delete');
-
 Route::get('/monitoring/restore', [HistoryController::class, 'restore'])->name('monitoring.restore');
 Route::post('/monitoring', [HistoryController::class, 'store'])->name('monitoring.store');
 
