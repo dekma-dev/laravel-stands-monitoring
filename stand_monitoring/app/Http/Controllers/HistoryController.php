@@ -58,7 +58,6 @@ class HistoryController extends Controller
         return view('monitoring.index', [
             'sorted'=> DB::table('histories')
                     ->orderBy('State', 'desc')
-
                     ->Paginate(6)
         ]);                   
     }
@@ -143,9 +142,9 @@ class HistoryController extends Controller
                     ->where('id',$allData[$entry]["id"])
                     ->update(['Authenticity' => 'True']);
             }
-        } 
+        }
         else if ($request->get("Authenticity") != $allData[0]["Authenticity"] && $DBDatas["Authenticity"] == "False") {
-            for ($entry = 0; $entry < count($allData); $entry++) { 
+        for ($entry = 0; $entry < count($allData); $entry++) { 
                 DB::table('archive')
                     ->where('id',$allData[$entry]["id"])
                     ->update(['Authenticity' => 'False']);
@@ -201,7 +200,7 @@ class HistoryController extends Controller
             'WorkTime' => 'integer',
             'Purpose' => 'string',
             'Country' => 'string',
-        ]); 
+        ]);
 
         $curMark = Archive::where('RFID', $RFIDRequest)->where('ID_stanok', $IDStanokRequest)->orderBy('updated_at', 'desc')->get();
 
