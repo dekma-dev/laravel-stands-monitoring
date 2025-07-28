@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\ArchiveController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TableController;
+
+Auth::routes();
+
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
+
+Route::get('/monitoring', [HistoryController::class, 'index'])->name('monitoring.index');
+Route::get('/monitoring/search', [HistoryController::class, 'search'])->name('monitoring.search');
+Route::get('/monitoring/create', [HistoryController::class, 'create'])->name('monitoring.create');
+Route::get('/monitoring/edit', [HistoryController::class, 'edit'])->name('monitoring.edit');
+Route::patch('/monitoring', [HistoryController::class, 'update'])->name('monitoring.update');
+Route::get('/monitoring/deleting', [HistoryController::class, 'deleteData'])->name('monitoring.deleteData');
+//delete по конвенции /monitoring с методом delete, обработчик - action with route, а у меня параша какая-то
+Route::get('/monitoring/delete', [HistoryController::class, 'destroy'])->name('monitoring.delete');
+Route::get('/monitoring/restore', [HistoryController::class, 'restore'])->name('monitoring.restore');
+Route::post('/monitoring', [HistoryController::class, 'store'])->name('monitoring.store');
+
+Route::get('/monitoring/sending', [HistoryController::class, 'setOrUpdateData'])->name('monitoring.sending');
+
+Route::get('/monitoring/presentation', [ArchiveController::class, 'index'])->name('monitoring.show');
+Route::get('/monitoring/presentation/print', [ArchiveController::class, 'show'])->name('monitoring.print');
+//проблема missing required parameter может заключаться в {} в роутах
+
+Route::get('/home', [HomeController::class, 'index'])->name('home.index');
+Route::patch('/home', [HomeController::class, 'update'])->name('home.update');
+Route::post('/home', [HomeController::class, 'store'])->name('home.store');
+Route::delete('/home/delete/{id}', [HomeController::class, 'destroy'])->name('home.destroy');
+Route::patch('/home/restore', [HomeController::class, 'restore'])->name('home.restore')->withTrashed();

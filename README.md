@@ -1,35 +1,66 @@
-# App
-Данная документация содержит в себе информацию о пользовательских моделях, контроллерах, трейтах и прочих классах. Её целью **не** является полное описание как проекта, так и фреймворка в целом.
-## Models
-Сейчас: практически все методы в ```HistoryController``` взаимодействуют напрямую с архивом *archive*, октуда вытягиваются данные в *historeis* что нелогично. Однако так реализовано.
-Должно быть: работа с отображением на главной и обновлением, например, должна быть связана только с *histories* откуда **периодически** они отсылаются в *archive*. Отображение полной информации по конкретной метке, удаление, поиск всех меток глобально очевидно производится через *archive*. 
-### Archive
-Инфа о модели ```Arhcive```. Непосредственно связана с таблицей *archive*.
-### History
-Инфа о модели ```History```. Непосредственно связана с таблицей *histories*.
-## Controllers
-Согласно паттерну MVC -> Model - View - Controller, в контроллерах описана логика запросов и обработки данных, а так же открытия страниц и перенаправления.
-### ArchiveController
-Инфа о контроллере ```ArhciveController```. Непосредственно связан с моделью ```Archive```.
-### HistoryController
-Контроллер непосредственно связан со своей моделью ```History```, однако взаимодействия с ```Archive``` присутствуют активным образом. Это неправильно. Может быть. А может и нет. А может да и хер с ним.
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-Работа с представлением главной страницы ```route::/``` осуществляется в методе ```index()```. Главное взаимодействие происходит с ```Hisory```, где хранится до 100 записей для быстрого доступа.
-Эти записи пуллятся из ```Archive``` **по определённому обстоятельству**. Алгоритм обновления следующий: происходит запрос к ```Archive``` с целью получения 100 последних уникальных(таблица *archive* содержит в себе историю работ всех меток, соответственно записей об одной и той же метке может быть множество) записей. Либо же сравнением хэша обновлять.
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-Создание метки посредством взаимодействия пользователя с GUI описана в методах ```create()``` и ```store(Request::)```, ```route:://create```. Согласно паттернам разработки Laravel, ```create()``` возвращает страницу для взаимодействия с пользователем, которая в свою очередь отправляет полученные с интерфейса данные в виде экземпляра класса ```Request``` в метод ```store()```, где происходит описана логика создания метки.
-**Записи создаются в *archive* таблице, откуда пуллом летят в *histories* и отображаются на главной.**
+## About Laravel
 
-Поиск метки реализован в методе пользовательском ```search(Request::, Archive::)```, маршрут ```route:://search?..```. Данные пуллятся из *archive* таблицы с расширенным поиском ```withTrashed()``` библиотеки ```SoftDeletes``` для поиска удаленных меток. Выводятся абсолютно все совпадения, все метки по запросу. Запрос может быть неполным, то есть нет необходимости в полнословном запросе.
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-Обновление данных через интерфейс (вручную) реализовано путём взаимодействия с GUI, который предоставляет метод ```edit(Request::, Archive::)```, располагающийся по роуту ```route::/edit```, сам метод лишь принимает данные и перенаправляет их в метод ```store(Request::, Archive::, History::)```, который не возвращает ничего, лишь проводит обновлением с помощью ```PATCH()``` запроса и перенаправляет в ```route::/``` на главную. Сами данные обновляются в ***archive* таблице, что неправильно**
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-```destoy(Request::, Archive::)```
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-```resotre(Request::, Archive::)```
+## Learning Laravel
 
-Последний метод ```setOrUpdateData(Request::)``` работает только с данными, пришедшими с железа - МК, однако можно симитировать перейдя по роуту ```route::/sending?..```. Метод принимает данные с прямого запроса, записывает или обновляет данные в *archive*. Также производится расчёт количества смыканий путём сложения пришедших данных ```$request->count``` с количеством в базе ```$this->Count```.
-## Events & Listeners
-Классический событийно-ориентированный подход, реализация такая же, как в большинстве back-end фреймворках.
-### Update Event & Listener
-Данное событие и его слушатель вызываются при приёме данных с *автоматической* МК отправке по ```route::/sending?..```. Адрес задействует ```HistoryController->setOrUpdateData(Request::, Archive::)``` метод. Обновление данных происходит по формуле, где с текущего состояния вычитается пришедшее количество смыканий, делённое на износостойкость метки, результат приводится к %.  
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+
+You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+
+## Laravel Sponsors
+
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+
+### Premium Partners
+
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Cubet Techno Labs](https://cubettech.com)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[Many](https://www.many.co.uk)**
+- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
+- **[DevSquad](https://devsquad.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[OP.GG](https://op.gg)**
+- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+- **[Lendio](https://lendio.com)**
+
+## Contributing
+
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+
+## Code of Conduct
+
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+
+## Security Vulnerabilities
+
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+
+## License
+
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
